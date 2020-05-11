@@ -2,7 +2,7 @@ int sensorpin1 = 0;
 int sensorpin2 = 1;
 int val1 = 0;
 int val2 = 0;
-int level = 150; //set the good level of your sensor
+int level = 100; //set the good level of your sensor
 int max_nbr_person = 3; // number of people max for a room
 int green_led = 3;
 int red_led = 4;
@@ -22,14 +22,17 @@ void go(int temp){ //led switch
 }
 
 bool check_measure(int sensor){
+  int average = 0;
   for (int i=0; i<10; i++){
     delay(5);
     int temp1 = analogRead(sensor);
-    if (temp1 <= level){
-      return false;
-    }
+    average+=temp1;
   }
-  return true;
+  if ((average/10)>level){
+    return true;
+  }else{
+    return false;
+  }
 }
 
 
@@ -37,11 +40,7 @@ void setup()
 {
   Serial.begin(9600); 
   pinMode(green_led, OUTPUT);
-  pinMode(red_led, OUTPUT);
-  pinMode(2, OUTPUT);
-  pinMode(7, OUTPUT);
-  digitalWrite(2,HIGH);  
-  digitalWrite(7,HIGH);  
+  pinMode(red_led, OUTPUT); 
   digitalWrite(green_led,HIGH);  
   digitalWrite(red_led,LOW);            
 }
@@ -88,15 +87,4 @@ void loop()
       go(true);
     }
   } 
-  /*
-  if (val1 > 150){
-    delay(10);
-    int temp1 = analogRead(sensorpin1);
-    delay(10);
-    int temp2 = analogRead(sensorpin1);
-    delay(10);
-    int temp3 = analogRead(sensorpin1);
-    if (temp1 >= 150 && temp2 >= 150 && temp3 >= 150)
-    Serial.println(val1);                  
-  }*/
 }
